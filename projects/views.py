@@ -1,20 +1,27 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import Project
+from .models import Project, Tag
 from .forms import ProjectForm
 from django.contrib.auth.decorators import login_required
+from .utils import searchProjects, paginateProjects
+
+
 
 # Create your views here.
 def projects(request):
-    projects = Project.objects.all()
-    context = {'projects':projects}
+    projects, search_query = searchProjects(request)
+    results = 3 # Number of results per page
+    custom_range, projects = paginateProjects(request, projects, results)
+    context = {'projects':projects, 'search_query':search_query, 'custom_range':custom_range}
     return render(request, 'projects/projects.html', context)
+
 
 def project(request, pk):
     projectObj = Project.objects.get(id=pk)
     tags = projectObj.tags.all()
     context = {'project':projectObj, 'tags':tags}
     return render(request, 'projects/single-project.html', context)
+
 
 @login_required(login_url="login") # If not logged in, redirect to the login URL
 def createProject(request):
@@ -32,6 +39,7 @@ def createProject(request):
     context = {'form':form}
     return render(request, "projects/project_form.html", context)
 
+
 @login_required(login_url="login") # If not logged in, redirect to the login URL
 def updateProject(request, pk):
     profile = request.user.profile
@@ -46,6 +54,7 @@ def updateProject(request, pk):
 
     context = {'form':form}
     return render(request, "projects/project_form.html", context)
+
 
 @login_required(login_url="login") # If not logged in, redirect to the login URL
 def deleteProject(request, pk):

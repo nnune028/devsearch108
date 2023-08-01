@@ -58,5 +58,7 @@
         </div>
       </div>
     </section>
+      <!-- queryset allows us to use a dynamic variable to allow for pagination of multiple things such as projects, developers, etc. -->
+      {% include 'pagination.html' with queryset=profiles %}
   </main>
 {% endblock %}
