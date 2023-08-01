@@ -1,0 +1,14 @@
+''' This is a file for helper functions '''
+
+from .models import Profile, Skill
+from django.db.models import Q
+
+def searchProfiles(request):
+    search_query = ''
+    if request.GET.get('search_query'):
+        search_query = request.GET.get('search_query')
+    skills = Skill.objects.filter(name__icontains=search_query) # iexact means it must match exactly, icontains can contain part of it
+    profiles = Profile.objects.distinct().filter(Q(name__icontains=search_query) | 
+                                      Q(short_intro__icontains=search_query) |
+                                      Q(skill__in=skills)) # The Q makes this an OR
+    return profiles, search_query

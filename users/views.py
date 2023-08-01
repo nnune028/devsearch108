@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from .models import Profile
 from .forms import CustomUserCreationForm, ProfileForm, SkillForm
 from django.contrib.auth.decorators import login_required
+from .utils import searchProfiles
 
 # Create your views here.
 
@@ -33,10 +34,12 @@ def loginUser(request):
 
     return render(request, 'users/login_register.html')
 
+
 def logoutUser(request):
     logout(request) # Deletes the session
     messages.success(request, 'User was successfully logged out.')
     return redirect('login')
+
 
 def registerUser(request):
     page = 'register'
@@ -58,9 +61,10 @@ def registerUser(request):
     context = {'page':page, 'form':form}
     return render(request, 'users/login_register.html', context)
 
+
 def profiles(request):
-    profiles = Profile.objects.all()
-    context = {'profiles':profiles}
+    profiles, search_query = searchProfiles(request)
+    context = {'profiles':profiles, 'search_query':search_query}
     return render(request, 'users/profiles.html', context)
 
 
@@ -74,6 +78,7 @@ def userProfile(request, pk):
     context = {'profile':profile, 'topSkills':topSkills, 'otherSkills':otherSkills}
     return render(request, 'users/user-profile.html', context)
 
+
 @login_required(login_url='login')
 def userAccount(request):
     profile = request.user.profile
@@ -83,6 +88,7 @@ def userAccount(request):
 
     context = {'profile':profile, 'skills':skills, 'projects':projects}
     return render(request, 'users/account.html', context)
+
 
 @login_required(login_url='login')
 def editAccount(request):
@@ -97,6 +103,7 @@ def editAccount(request):
 
     context = {'form':form}
     return render(request, 'users/profile_form.html', context)
+
 
 @login_required(login_url='login')
 def createSkill(request):
@@ -115,6 +122,7 @@ def createSkill(request):
     context = {'form':form}
     return render(request, 'users/skill_form.html', context)
 
+
 @login_required(login_url='login')
 def updateSkill(request, pk):
     profile = request.user.profile
@@ -130,6 +138,7 @@ def updateSkill(request, pk):
 
     context = {'form':form}
     return render(request, 'users/skill_form.html', context)
+
 
 @login_required(login_url='login')
 def deleteSkill(request, pk):
