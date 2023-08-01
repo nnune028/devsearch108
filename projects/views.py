@@ -18,12 +18,15 @@ def project(request, pk):
 
 @login_required(login_url="login") # If not logged in, redirect to the login URL
 def createProject(request):
+    profile = request.user.profile
     form = ProjectForm()
 
     if request.method == 'POST':
         form = ProjectForm(request.POST, request.FILES) # FILES is necessary for image upload
         if form.is_valid():
-            form.save() # Saves the data to the database
+            project = form.save(commit=False) # Saves an instance of the project
+            project.owner = profile
+            project.save() # Saves the data to the database
             return redirect('projects') # Takes the user back to the projects page
 
     context = {'form':form}
@@ -31,7 +34,8 @@ def createProject(request):
 
 @login_required(login_url="login") # If not logged in, redirect to the login URL
 def updateProject(request, pk):
-    project = Project.objects.get(id=pk) # Gets the existing project
+    profile = request.user.profile
+    project = profile.project_set.get(id=pk)
     form = ProjectForm(instance=project) # Form is assigned to the existing project
 
     if request.method == 'POST':
@@ -45,9 +49,10 @@ def updateProject(request, pk):
 
 @login_required(login_url="login") # If not logged in, redirect to the login URL
 def deleteProject(request, pk):
-    project = Project.objects.get(id=pk) # Query object
+    profile = request.user.profile
+    project = profile.project_set.get(id=pk)
     if request.method == 'POST':
         project.delete()
         return redirect('projects')
     context = {'object':project}
-    return render(request, "projects/delete_template.html", context)
+    return render(request, "delete_template.html", context)
