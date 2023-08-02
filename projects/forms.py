@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 from django import forms # Allows us to modify fields
-from .models import Project
+from .models import Project, Review
 
 class ProjectForm(ModelForm):
     class Meta: # Metadata attached to the model
@@ -16,6 +16,22 @@ class ProjectForm(ModelForm):
 
         # self.fields['title'].widget.attrs.update({'class':'input', 'placeholder':'Add title'}) # Update the class and make it an input field
         # self.fields['description'].widget.attrs.update({'class':'input', 'placeholder':'Description here'})
+
+        # Iterates throught the dictionary instead of doing each one individually
+        for name, field in self.fields.items():
+            field.widget.attrs.update({'class':'input', 'placeholder':'Insert ' + name + ' here'})
+
+class ReviewForm(ModelForm):
+    class Meta:
+        model = Review
+        fields = ['value', 'body']
+    
+        labels = {
+            'value':'Place your vote!',
+            'body':'Add a comment with a vote!',
+        }
+    def __init__(self, *args, **kwargs):
+        super(ReviewForm, self).__init__(*args, **kwargs) # Inherit from the ProjectForm class
 
         # Iterates throught the dictionary instead of doing each one individually
         for name, field in self.fields.items():
