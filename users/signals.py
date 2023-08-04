@@ -4,8 +4,11 @@ from django.dispatch import receiver
 from django.contrib.auth.models import User
 from .models import Profile
 
-@receiver(post_save, sender=Profile)
-def createProfile(sender, instance, created, **kwargs): # Whenwe create a user, a profile is automatically created
+from django.core.mail import send_mail
+from django.conf import settings
+
+@receiver(post_save, sender=User)
+def createProfile(sender, instance, created, **kwargs): # When we create a user, a profile is automatically created
     print('Profile signal triggered!')
     if created: # If this is the first instance of the user
         user = instance
@@ -13,7 +16,18 @@ def createProfile(sender, instance, created, **kwargs): # Whenwe create a user, 
             user=user,
             username=user.username,
             email=user.email,
-            name=user.first_name
+            name=user.first_name,
+        )
+
+        subject = 'Welcome to DevSearch!'
+        message = 'Thank you for creating your profile! We are glad you are here!'
+
+        send_mail(
+            subject,
+            message,
+            settings.EMAIL_HOST_USER, # Sender
+            [profile.email], # Recipient
+            fail_silently=False
         )
 
 @receiver(post_save, sender=Profile)
@@ -32,5 +46,6 @@ def deleteUser(sender, instance, **kwargs):
     user.delete() # Deletes the user associated with the profile queried
 
 ''' This is how you do it if you do not use the decorators '''
+# post_save.connect(updateUser, sender=Profile)
 # post_save.connect(createProfile, sender=Profile)
 # post_delete.connect(deleteUser, sender=Profile)
