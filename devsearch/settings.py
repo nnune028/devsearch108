@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # Must add these so that Django knows how to access the db
     'projects.apps.ProjectsConfig',
     'users.apps.UsersConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
