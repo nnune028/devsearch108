@@ -25,6 +25,14 @@ class Project(models.Model):
     
     class Meta:
         ordering = ['-vote_ratio', '-vote_total'] # Sort by ratio. If ratio is the same, the one with the higher total takes precedent
+
+    @property
+    def imageURL(self):
+        try:
+            url = self.featured_image.url
+        except:
+            url = ''
+        return url
     
     @property
     def reviewers(self):
