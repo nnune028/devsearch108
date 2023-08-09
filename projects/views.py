@@ -44,11 +44,16 @@ def createProject(request):
     form = ProjectForm()
 
     if request.method == 'POST':
+        newtags = request.POST.get('newtags').replace(',', ' ').split() # Takes each word and splits by spaces
+
         form = ProjectForm(request.POST, request.FILES) # FILES is necessary for image upload
         if form.is_valid():
             project = form.save(commit=False) # Saves an instance of the project
             project.owner = profile
             project.save() # Saves the data to the database
+            for tag in newtags:
+                tag, created = Tag.objects.get_or_create(name=tag)
+                project.tags.add(tag)
             return redirect('projects') # Takes the user back to the projects page
 
     context = {'form':form}
@@ -62,9 +67,13 @@ def updateProject(request, pk):
     form = ProjectForm(instance=project) # Form is assigned to the existing project
 
     if request.method == 'POST':
+        newtags = request.POST.get('newtags').replace(',', ' ').split() # Takes each word and splits by spaces
         form = ProjectForm(request.POST, request.FILES, instance=project)
         if form.is_valid():
-            form.save() # Saves the data to the database
+            project = form.save() # Saves the data to the database
+            for tag in newtags:
+                tag, created = Tag.objects.get_or_create(name=tag)
+                project.tags.add(tag)
             return redirect('projects') # Takes the user back to the projects page
 
     context = {'form':form}

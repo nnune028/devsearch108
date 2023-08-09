@@ -42,8 +42,11 @@ def updateUser(sender, instance, created, **kwargs):
 
 @receiver(post_delete, sender=Profile)
 def deleteUser(sender, instance, **kwargs):
-    user = instance.user
-    user.delete() # Deletes the user associated with the profile queried
+    try:
+        user = instance.user
+        user.delete() # Deletes the user associated with the profile queried
+    except:
+        pass
 
 ''' This is how you do it if you do not use the decorators '''
 # post_save.connect(updateUser, sender=Profile)
