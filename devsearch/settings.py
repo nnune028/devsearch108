@@ -142,13 +142,6 @@ DATABASES = {
     }
 }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -209,14 +202,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AWS_QUERYSTRING_AUTH = False
 AWS_S3_FILE_OVERWRITE = False
 
-# STORAGES = {"default": {"BACKEND": "storages.backends.s3boto3.S3Boto3Storage"}}
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-# AWS_ACCESS_KEY_ID = 'AKIAUB3WK3AC7O25GGH5'
-# AWS_SECRET_ACCESS_KEY = '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'
-AWS_ACCESS_KEY_ID = 'AKIAUB3WK3ACSQWQ5KE6'
-AWS_SECRET_ACCESS_KEY = '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'
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = 'devsearch-bucket108'
-# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
 
 if os.getcwd() == '/app':
     DEBUG = False
