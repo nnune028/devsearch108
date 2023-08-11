@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +27,7 @@ SECRET_KEY = 'django-insecure-e+fls8z1egt2e(yxy9tbh=04mpidlok_ofbk@)iacf!4mb0)_6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'devsearch108-b1f798d5a1f5.herokuapp.com/']
 
 
 # Application definition
@@ -216,3 +217,6 @@ AWS_ACCESS_KEY_ID = 'AKIAUB3WK3ACSQWQ5KE6'
 AWS_SECRET_ACCESS_KEY = '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'
 AWS_STORAGE_BUCKET_NAME = 'devsearch-bucket108'
 # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
+
+if os.getcwd() == '/app':
+    DEBUG = False
