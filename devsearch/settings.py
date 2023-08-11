@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-e+fls8z1egt2e(yxy9tbh=04mpidlok_ofbk@)iacf!4mb0)_6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'projects.apps.ProjectsConfig',
     'users.apps.UsersConfig',
     'rest_framework',
+    'storages',
 ]
 
 REST_FRAMEWORK = {
@@ -131,11 +132,21 @@ WSGI_APPLICATION = 'devsearch.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'devsearch',
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': '5432',
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -193,3 +204,15 @@ STATIC_ROOT = BASE_DIR / 'staticfiles' # Defines where our static files in produ
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AWS_QUERYSTRING_AUTH = False
+AWS_S3_FILE_OVERWRITE = False
+
+# STORAGES = {"default": {"BACKEND": "storages.backends.s3boto3.S3Boto3Storage"}}
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# AWS_ACCESS_KEY_ID = 'AKIAUB3WK3AC7O25GGH5'
+# AWS_SECRET_ACCESS_KEY = '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'
+AWS_ACCESS_KEY_ID = 'AKIAUB3WK3ACSQWQ5KE6'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'devsearch-bucket108'
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'

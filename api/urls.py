@@ -12,4 +12,5 @@ urlpatterns = [
     path('users/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'), # Generate a simple token
     path('users/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'), # Give us a token to generate a new token. Token with a longer lifespan
     path('projects/<str:pk>/vote/', views.projectVote),
+    path('remove-tag/', views.removeTag),
 ]
